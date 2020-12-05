@@ -1,20 +1,28 @@
 defmodule BoardingPass do
   def calculate_seat_id({row, seat}) do
-    calculate_row(row)# * 8 + calculate_seat(seat)
+    calculate_row(row) * 8 + calculate_seat(seat)
   end
 
   def calculate_row(row) do
     String.graphemes(row)
     |> Enum.reduce(Enum.to_list(0..127), fn letter, range ->
-      IO.inspect(range, label: "range")
-      IO.inspect(letter, label: "letter")
       {front_half, back_half} = Enum.split(range, round(Enum.count(range) / 2))
-      IO.inspect(front_half, label: "front_half")
-      IO.inspect(back_half, label: "back_half")
       if letter == "B",
        do: back_half,
        else: front_half
     end)
+    |> List.first()
+  end
+
+  def calculate_seat(seat) do
+    String.graphemes(seat)
+    |> Enum.reduce(Enum.to_list(0..7), fn letter, range ->
+      {front_half, back_half} = Enum.split(range, round(Enum.count(range) / 2))
+      if letter == "R",
+       do: back_half,
+       else: front_half
+    end)
+    |> List.first()
   end
 end
 
